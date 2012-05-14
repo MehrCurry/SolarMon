@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+      http://www.osgi.org/xmlns/blueprint/v1.0.0
+      http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<route>
+			<from uri="file:data/in?noop=true" />
+			<to uri="log:com.mycompany.order?showAll=true&amp;multiline=true" />
+			<to
+				uri="exec:/Applications/HandBrakeCLI?workingDir=.&amp;outFile=out.mp4&amp;useStderrOnEmptyStdout=true&amp;args=-i ${header.CamelFilePath} -o out.mp4 -r 25 --preset HighProfile" />
+			<to uri="log:com.mycompany.order?showAll=true&amp;multiline=true" />
+		</route>
+	</camelContext>
+</blueprint>

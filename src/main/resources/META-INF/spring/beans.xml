@@ -7,9 +7,13 @@
 		http://camel.apache.org/schema/osgi http://camel.apache.org/schema/osgi/camel-osgi-2.0-M1.xsd
 		http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring-2.0-M1.xsd">
 
-	<camel:camelContext id="camel6"
+	<camel:camelContext id="camel1"
 		xmlns="http://camel.apache.org/schema/spring">
-		<package>de.gzockoll.camel.proxy</package>
+		<package>de.gzockoll.camel.solarmon</package>
 	</camel:camelContext>
 
+  <bean id="activemq" 
+      class="org.apache.activemq.camel.component.ActiveMQComponent">
+      <property name="brokerURL" value="tcp://localhost:61616"/>
+   </bean>
 </beans>
