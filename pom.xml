@@ -121,22 +121,6 @@
 				<artifactId>camel-maven-plugin</artifactId>
 				<version>2.10-SNAPSHOT</version>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.servicemix.tooling</groupId>
-				<artifactId>features-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>generate-features-xml</goal>
-						</goals>
-						<configuration>
-							<kernelVersion>1.1.0</kernelVersion>
-							<!-- <bundles>target/classes/bundles.properties</ bundles> -->
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 </project>
