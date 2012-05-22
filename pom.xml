@@ -2,9 +2,42 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.gzockoll.camel</groupId>
+	<artifactId>solarmon</artifactId>
+	<packaging>bundle</packaging>
+	<parent>
+		<groupId>de.gzockoll.osgi</groupId>
+		<artifactId>OsgiParent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+		<issueManagement>
+		<system>JIRA</system>
+		<url>http://builder:8081/jira/</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://builder:8081/jenkins/</url>
+	</ciManagement>
+	<scm>
+		<connection>scm:git:git@github.com:MehrCurry/${project.artifactId}.git</connection>
+		<developerConnection>scm:git:git@github.com:MehrCurry/${project.artifactId}.git</developerConnection>
+		<url>https://github.com/MehrCurry/${project.artifactId}</url>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>local-releases</name>
+			<url>http://builder:8081/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>local-snapshots</name>
+			<url>http://builder:8081/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 	<properties>
 		<camel.version>2.9.2</camel.version>
-		<activemq.version>5.5.1</activemq.version>
+		<activemq.version>5.6.0</activemq.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -88,13 +121,22 @@
 				<artifactId>camel-maven-plugin</artifactId>
 				<version>2.10-SNAPSHOT</version>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.servicemix.tooling</groupId>
+				<artifactId>features-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate-features-xml</goal>
+						</goals>
+						<configuration>
+							<kernelVersion>1.1.0</kernelVersion>
+							<!-- <bundles>target/classes/bundles.properties</ bundles> -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-	<artifactId>solarmon</artifactId>
-	<parent>
-		<groupId>de.gzockoll.osgi</groupId>
-		<artifactId>OsgiParent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-	<packaging>bundle</packaging>
 </project>
