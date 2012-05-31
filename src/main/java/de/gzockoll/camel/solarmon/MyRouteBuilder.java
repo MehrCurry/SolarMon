@@ -1,5 +1,7 @@
 package de.gzockoll.camel.solarmon;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 
 public class MyRouteBuilder extends RouteBuilder {
@@ -10,7 +12,7 @@ public class MyRouteBuilder extends RouteBuilder {
 		from("timer://init?fixedRate=true&period=" + RATE)
 				.bean(Initializer.class).split(body()).to("seda:out");
 
-		from("timer://zockoll2?fixedRate=true&period=500")
+		from("timer://zockoll2?fixedRate=true&period=1000")
 				.setHeader("Owner")
 				.constant("Zockoll")
 				.to("http://piko?nocache&authMethod=Basic&authUsername=pvserver&authPassword=pvwr")
@@ -18,7 +20,8 @@ public class MyRouteBuilder extends RouteBuilder {
 				.tidyMarkup()
 				.multicast()
 				.to("seda:piko1", "seda:piko2", "seda:piko3", "seda:piko4",
-						"seda:piko5");
+						"seda:piko5", "seda:piko6", "seda:piko7");
+
 		from("seda:piko1").setBody()
 				.xpath("/html/body/form/table[3]/tr[4]/td[3]/text()")
 				.setHeader("MeasurementID").constant("Zockoll.Pac.WR")
@@ -36,9 +39,15 @@ public class MyRouteBuilder extends RouteBuilder {
 				.setHeader("Unit")
 				.constant("WATT")
 				.convertBodyTo(String.class)
-				.setBody()
-				.groovy("Double.parseDouble(request.getBody().trim()) * 1000.0")
-				.convertBodyTo(String.class).process(new PikoProcessor())
+				.process(new Processor() {
+
+					@Override
+					public void process(Exchange ex) throws Exception {
+						Double value = Double.parseDouble(ex.getIn().getBody()
+								.toString().trim()) * 1000.0;
+						ex.getIn().setBody(value);
+					}
+				}).convertBodyTo(String.class).process(new PikoProcessor())
 				.split(body()).to("seda:out");
 		from("seda:piko3").setBody()
 				.xpath("/html/body/form/table[3]/tr[4]/td[6]/text()")
@@ -47,29 +56,29 @@ public class MyRouteBuilder extends RouteBuilder {
 				.constant("WATT").convertBodyTo(String.class)
 				.process(new PikoProcessor()).split(body()).to("seda:out");
 
-		from("seda:piko4")
-				.setBody()
+		from("seda:piko4").setBody()
 				.xpath("/html/body/form/table[3]/tr[14]/td[3]/text()")
-				.setHeader("MeasurementID")
-				.constant("Zockoll.Udc1.WR")
-				.setHeader("Phaenomen")
-				.constant("SPANNUNG")
-				.setHeader("Unit")
-				.constant("VOLT")
-				.convertBodyTo(String.class)
-				.to("log:de.gzockoll.camel.solarmon?showAll=true&multiline=true")
+				.setHeader("MeasurementID").constant("Zockoll.Udc1.WR")
+				.setHeader("Phaenomen").constant("SPANNUNG").setHeader("Unit")
+				.constant("VOLT").convertBodyTo(String.class)
 				.process(new PikoProcessor()).split(body()).to("seda:out");
-		from("seda:piko5")
-				.setBody()
+		from("seda:piko5").setBody()
 				.xpath("/html/body/form/table[3]/tr[19]/td[3]/text()")
-				.setHeader("MeasurementID")
-				.constant("Zockoll.Udc2.WR")
-				.setHeader("Phaenomen")
-				.constant("SPANNUNG")
-				.setHeader("Unit")
-				.constant("VOLT")
-				.convertBodyTo(String.class)
-				.to("log:de.gzockoll.camel.solarmon?showAll=true&multiline=true")
+				.setHeader("MeasurementID").constant("Zockoll.Udc2.WR")
+				.setHeader("Phaenomen").constant("SPANNUNG").setHeader("Unit")
+				.constant("VOLT").convertBodyTo(String.class)
+				.process(new PikoProcessor()).split(body()).to("seda:out");
+		from("seda:piko6").setBody()
+				.xpath("/html/body/form/table[3]/tr[16]/td[3]/text()")
+				.setHeader("MeasurementID").constant("Zockoll.Idc1.WR")
+				.setHeader("Phaenomen").constant("STROM").setHeader("Unit")
+				.constant("AMPERE").convertBodyTo(String.class)
+				.process(new PikoProcessor()).split(body()).to("seda:out");
+		from("seda:piko7").setBody()
+				.xpath("/html/body/form/table[3]/tr[21]/td[3]/text()")
+				.setHeader("MeasurementID").constant("Zockoll.Idc2.WR")
+				.setHeader("Phaenomen").constant("STROM").setHeader("Unit")
+				.constant("AMPERE").convertBodyTo(String.class)
 				.process(new PikoProcessor()).split(body()).to("seda:out");
 
 		from("timer://zockoll?fixedRate=true&period=" + RATE)

@@ -2,11 +2,13 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ManualContextCreationTest {
 
 	@Test
+	@Ignore
 	public void testContext() throws Exception {
 		CamelContext context = new DefaultCamelContext();
 

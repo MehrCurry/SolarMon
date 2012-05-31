@@ -11,11 +11,10 @@ import de.gzockoll.measurement.InstrumentConfigurationFactory;
 
 public class Initializer implements InstrumentConfigurationFactory {
 	private static final String UNIT_V = "Volt";
+	private static final String UNIT_A = "Ampere";
 	private static final String UNIT_W = "Watt";
-	private static final String UDC2 = "Spannung 2";
-	private static final String UDC1 = "Spannung 1";
-	private static final String PDC1 = "Strang 1";
-	private static final String PDC2 = "Strang 2";
+	private static final String DC1 = "Strang 1";
+	private static final String DC2 = "Strang 2";
 	private static final String PAC = "AC Leistung";
 
 	@Override
@@ -43,19 +42,25 @@ public class Initializer implements InstrumentConfigurationFactory {
 						.section(
 								ColoredRange.create(Color.GREEN, 2 * kwp / 3,
 										max * 2)).unit(UNIT_W).build());
+		configurations.add(InstrumentConfiguration.builder().threshold(800)
+				.instrument("radial25").name("Zockoll.Idc1.WR.STROM").min(0)
+				.max(10).title(DC1).unit(UNIT_A).build());
+		configurations.add(InstrumentConfiguration.builder().threshold(800)
+				.instrument("radial26").name("Zockoll.Idc2.WR.STROM").min(0)
+				.max(10).title(DC2).unit(UNIT_A).build());
 		configurations.add(InstrumentConfiguration.builder()
 				.instrument("radial27").name("Zockoll.Ertrag.WR.ENERGIE")
 				.min(0).max(max * 10)
 				.section(ColoredRange.create(Color.RED, 0, kwp * 2))
 				.section(ColoredRange.create(Color.YELLOW, kwp * 2, kwp * 4))
-				.section(ColoredRange.create(Color.GREEN, kwp * 4, kwp * 10))
-				.title("Ertrag").unit("kWh").build());
+				.section(ColoredRange.create(Color.GREEN, kwp * 4, kwp * 12))
+				.title("Ertrag").unit("Wh").build());
 		configurations.add(InstrumentConfiguration.builder().threshold(800)
 				.instrument("radial28").name("Zockoll.Udc1.WR.SPANNUNG").min(0)
-				.max(1000).title(UDC1).unit(UNIT_V).build());
+				.max(400).title(DC1).unit(UNIT_V).build());
 		configurations.add(InstrumentConfiguration.builder().threshold(800)
 				.instrument("radial29").name("Zockoll.Udc2.WR.SPANNUNG").min(0)
-				.max(1000).title(UDC2).unit(UNIT_V).build());
+				.max(400).title(DC2).unit(UNIT_V).build());
 
 		return configurations;
 	}
@@ -82,25 +87,25 @@ public class Initializer implements InstrumentConfigurationFactory {
 										max * 2)).unit(UNIT_W).build());
 		configurations.add(InstrumentConfiguration.builder()
 				.instrument("radial" + index++).name(owner + ".Pdc1.LEISTUNG")
-				.min(0).max(max / 2).title(PDC1).unit(UNIT_W).threshold(2730)
+				.min(0).max(max / 2).title(DC1).unit(UNIT_W).threshold(kwp / 2)
 				.build());
 		configurations.add(InstrumentConfiguration.builder()
 				.instrument("radial" + index++).name(owner + ".Pdc2.LEISTUNG")
-				.min(0).max(max / 2).title(PDC2).unit(UNIT_W).threshold(2730)
+				.min(0).max(max / 2).title(DC2).unit(UNIT_W).threshold(kwp / 2)
 				.build());
 		configurations.add(InstrumentConfiguration.builder()
 				.instrument("radial" + index++).name(owner + ".Ertrag.ENERGIE")
 				.min(0).max(max * 10)
 				.section(ColoredRange.create(Color.RED, 0, kwp * 2))
 				.section(ColoredRange.create(Color.YELLOW, kwp * 2, kwp * 4))
-				.section(ColoredRange.create(Color.GREEN, kwp * 4, kwp * 10))
+				.section(ColoredRange.create(Color.GREEN, kwp * 4, kwp * 12))
 				.title("Ertrag").unit("Wh").build());
 		configurations.add(InstrumentConfiguration.builder().threshold(800)
 				.instrument("radial" + index++).name(owner + ".Udc1.SPANNUNG")
-				.min(0).max(1000).title(UDC1).unit(UNIT_V).build());
+				.min(0).max(800).title(DC1).unit(UNIT_V).build());
 		configurations.add(InstrumentConfiguration.builder().threshold(800)
 				.instrument("radial" + index++).name(owner + ".Udc2.SPANNUNG")
-				.min(0).max(1000).title(UDC2).unit(UNIT_V).build());
+				.min(0).max(800).title(DC2).unit(UNIT_V).build());
 		return configurations;
 	}
 

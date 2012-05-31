@@ -1,4 +1,5 @@
 import org.apache.camel.test.blueprint.CamelBlueprintTestSupport;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BlueprintTest extends CamelBlueprintTestSupport {
@@ -9,6 +10,7 @@ public class BlueprintTest extends CamelBlueprintTestSupport {
 	}
 
 	@Test
+	@Ignore
 	public void test1() throws InterruptedException {
 		Thread.sleep(10000);
 	}
