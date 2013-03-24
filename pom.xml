@@ -3,12 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.gzockoll.camel</groupId>
 	<artifactId>solarmon</artifactId>
-	<packaging>bundle</packaging>
-	<parent>
-		<groupId>de.gzockoll.osgi</groupId>
-		<artifactId>OsgiParent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+	<packaging>jar</packaging>
 	<issueManagement>
 		<system>JIRA</system>
 		<url>http://builder:8081/jira/</url>
