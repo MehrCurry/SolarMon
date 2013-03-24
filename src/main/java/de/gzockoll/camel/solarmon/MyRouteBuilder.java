@@ -5,13 +5,13 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 
 public class MyRouteBuilder extends RouteBuilder {
-	private static final long RATE = 30000l;
+	private static final long RATE = 5000l;
 
 	@Override
 	public void configure() throws Exception {
 		from("timer://init?fixedRate=true&period=" + RATE)
 				.bean(Initializer.class).split(body()).to("seda:out");
-
+/*
 		from("timer://zockoll2?fixedRate=true&period=1000")
 				.setHeader("Owner")
 				.constant("Zockoll")
@@ -85,6 +85,12 @@ public class MyRouteBuilder extends RouteBuilder {
 				.setHeader("Owner").constant("Zockoll")
 				.to("http://solarlog/min_day.js?nocache")
 				.process(new SolarLogProcessor()).split(body()).to("seda:out");
+*/
+		
+		from("timer://zockoll?fixedRate=true&period=" + RATE)
+		.setHeader("Owner").constant("Zockoll")
+		.to("http://monitoring.norderstedt-energie.de/1064/min_day.js?nocache")
+		.process(new SolarLogProcessor()).split(body()).to("seda:out");
 
 		from("timer://buck?fixedRate=true&period=" + RATE)
 				.setHeader("Owner")
@@ -92,12 +98,17 @@ public class MyRouteBuilder extends RouteBuilder {
 				.to("http://monitoring.norderstedt-energie.de/1063/min_day.js?nocache")
 				.process(new SolarLogProcessor()).split(body()).to("seda:out");
 
-		from("timer://sommerfelf?fixedRate=true&period=" + RATE)
+		from("timer://sommerfeld?fixedRate=true&period=" + RATE)
 				.setHeader("Owner")
 				.constant("Sommerfeld")
 				.to("http://monitoring.norderstedt-energie.de/1054/min_day.js?nocache")
 				.process(new SolarLogProcessor()).split(body()).to("seda:out");
 
-		from("seda:out").marshal().json().to("activemq:topic:observationsWeb");
+		from("timer://heartbeat?fixedRate=true&period=" + 1000)
+		.setBody()
+		.constant("Ping")
+		.to("seda:out");
+
+		from("seda:out").marshal().json().to("websocket://solarmon?sendToAll=true");
 	}
 }

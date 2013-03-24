@@ -10,8 +10,4 @@
 		xmlns="http://camel.apache.org/schema/spring">
 		<package>de.gzockoll.camel.solarmon</package>
 	</camel:camelContext>
-
-	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
-		<property name="brokerURL" value="tcp://localhost:61616" />
-	</bean>
 </beans>

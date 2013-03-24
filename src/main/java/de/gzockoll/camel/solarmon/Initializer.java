@@ -22,8 +22,8 @@ public class Initializer implements InstrumentConfigurationFactory {
 		List<InstrumentConfiguration> configurations = new ArrayList<InstrumentConfiguration>();
 
 		configurations.addAll(createConfiguration("Zockoll", 5460, 0));
-		configurations.addAll(createConfiguration("Buck", 7000, 8));
-		configurations.addAll(createConfiguration("Sommerfeld", 6820, 16));
+		configurations.addAll(createConfiguration("Buck", 7000, 6));
+		configurations.addAll(createConfiguration("Sommerfeld", 6820, 12));
 		int kwp = 5460;
 		int max = (int) (Math.ceil(kwp / 1000.0) * 1000.0);
 		configurations
